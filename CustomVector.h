@@ -410,6 +410,13 @@ void vector<T>::reserve(size_t newMem) {
     m_capacity = newMem;
 }
 
+/* 
+    NOTE** : this function is purely for debugging purposes and won't
+    work if used to try and print from a vector that holds objects
+    not overloaded for operator << 
+    e.g. vector<vector<int>> vec; vec.printelm() ERROR
+*/
+
 template <typename T>
 void vector<T>::printelm() {
     for (size_t i = 0; i < m_numElements; i++) {
