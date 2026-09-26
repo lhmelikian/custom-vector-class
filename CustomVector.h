@@ -12,6 +12,8 @@
 #include "reallocpp.h"       // legacy fallback
 #include "MimallocCore.h"    // mimalloc integration
 
+#define RESIZE_CAPACITY_FACTOR 20
+
 template <typename T>
 class vector {
 public:
@@ -292,7 +294,7 @@ void vector<T>::push_back(const T& value) {
         // T* temp_ptr = mi_reallocpp(m_data, m_capacity, 20 + m_capacity);
 
         // allocates new raw memory
-        temp_ptr = mi_rawReallocpp(m_data, m_capacity, 20 + m_capacity);
+        temp_ptr = mi_rawReallocpp(m_data, m_capacity, RESIZE_CAPACITY_FACTOR + m_capacity);
         if (temp_ptr == nullptr) 
             throw std::runtime_error("Memory allocation failed during push back");
 
@@ -300,7 +302,7 @@ void vector<T>::push_back(const T& value) {
         m_data = temp_ptr;
         temp_ptr = nullptr;
 
-        m_capacity += 20;
+        m_capacity += RESIZE_CAPACITY_FACTOR;
     }
 
     // now instantiate object in where we're about to push
@@ -425,7 +427,7 @@ void vector<T>::Zset() {
     if (m_data == nullptr)
         return;
     for (size_t i = 0; i < m_capacity; i++) {
-        m_data[i] = 0;
+        m_data[i] = T();
     }
 }
 
